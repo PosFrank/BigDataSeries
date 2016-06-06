@@ -1,39 +1,37 @@
-package PA2;
+package PA2SubmittedFiles;
 
+import java.util.List;
+/*
+ * @author Yingbei Tong, Tianxiang Gao
+ * use this class to test running time(speed) of exactJac and approximateJac
+ */
 public class MinHashSpeed {
-	public static void main(String args[]) {
-		String folderPath = "/Users/frankgao/Documents/COMS535/2/space/";
-		int numOfPermutation = 800;
-		MinHash test = new MinHash(folderPath, numOfPermutation);
-		int minHash = getTimeByMinHash(test);
-		int exact = getTimeByExact(test);
-		System.out.println("exact takes : " + exact + " secends");
-		System.out.println("minHash takes : " + minHash + " secends");
-	}
-
-	private static int getTimeByExact(MinHash test) {
-		long startTime = System.currentTimeMillis();
-		String[] files = test.allDocs();
-		for (int i = 0; i < files.length - 1; i++) {
-			for (int j = i + 1; j < files.length; j++) {
-				double realJac = test.exactJaccard(files[i], files[j]);
-			}
+	public static void main(String []args) {
+		String folder = "/Users/frankgao/Box Sync/Box Sync/MasterProgram/2016-Spring/Com S 535X/programmingAssignments/2/space";
+		int numPermutation = 800;//could be 400, 600, 800
+		MinHash minhash = new MinHash( folder, numPermutation);
+		List<String> alldoc = minhash.allDocs();
+		//compute time taken of this nested for loop
+		long start = System.currentTimeMillis();
+		for(int i = 0 ; i < alldoc.size()-1; i++) {
+			for(int j = i+1; j < alldoc.size(); j++ ) {
+				double exactJac = minhash.exactJaccard(alldoc.get(i), alldoc.get(j));
+				//double approximateJac = minhash.approximateJaccard(alldoc.get(i), alldoc.get(j));
+			}	
 		}
-		long endTime = System.currentTimeMillis();
-		long totalTime = endTime - startTime;
-		return (int) totalTime / 1000;
-	}
-
-	private static int getTimeByMinHash(MinHash test) {
-		long startTime = System.currentTimeMillis();
-		String[] files = test.allDocs();
-		for (int i = 0; i < files.length - 1; i++) {
-			for (int j = i + 1; j < files.length; j++) {
-				double approJac = test.approximateJaccard(files[i], files[j]);
-			}
+		long end = System.currentTimeMillis();
+		long timetaken = end - start;
+		System.out.println("time for exactJac: "+ (double)(1.0*timetaken/1000)+ "s");
+		start = System.currentTimeMillis();
+		for(int i = 0 ; i < alldoc.size()-1; i++) {
+			for(int j = i+1; j < alldoc.size(); j++ ) {
+				//double exactJac = minhash.exactJaccard(alldoc.get(i), alldoc.get(j));
+				double approximateJac = minhash.approximateJaccard(alldoc.get(i), alldoc.get(j));
+			}	
 		}
-		long endTime = System.currentTimeMillis();
-		long totalTime = endTime - startTime;
-		return (int) totalTime / 1000;
+		end = System.currentTimeMillis();
+		long timetaken2 = end - start;
+		System.out.println("time for approxJac: "+ ((double)timetaken2)/1000 + "s");
+		
 	}
 }
